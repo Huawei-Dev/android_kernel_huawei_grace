@@ -29,7 +29,7 @@
 #include "udf_sb.h"
 
 static int udf_translate_to_linux(uint8_t *, int, uint8_t *, int, uint8_t *,
-				int);
+				  int);
 
 static int udf_char_to_ustr(struct ustr *dest, const uint8_t *src, int strlen)
 {
@@ -382,7 +382,7 @@ int udf_get_filename(struct super_block *sb, uint8_t *sname, int slen,
 	} else
 		goto out2;
 
-    len = udf_translate_to_linux(dname, dlen,
+	len = udf_translate_to_linux(dname, dlen,
 				     filename->u_name, filename->u_len,
 				     unifilename->u_name, unifilename->u_len);
 out2:
@@ -492,10 +492,8 @@ static int udf_translate_to_linux(uint8_t *newName, int newLen,
 				newIndex = maxFilenameLen;
 			else
 				newIndex = newExtIndex;
-		} else if (newIndex > 250)
-			newIndex = 250;
-        } else if (newIndex > newLen - CRC_LEN)
-            newIndex = newLen - CRC_LEN;
+		} else if (newIndex > newLen - CRC_LEN)
+			newIndex = newLen - CRC_LEN;
 		newName[newIndex++] = CRC_MARK;
 		valueCRC = crc_itu_t(0, fidName, fidNameLen);
 		newName[newIndex++] = hexChar[(valueCRC & 0xf000) >> 12];

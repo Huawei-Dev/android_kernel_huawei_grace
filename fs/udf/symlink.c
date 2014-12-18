@@ -35,10 +35,10 @@ static int udf_pc_to_char(struct super_block *sb, unsigned char *from,
 {
 	struct pathComponent *pc;
 	int elen = 0;
-    int comp_len;
+	int comp_len;
 	unsigned char *p = to;
 
-    /* Reserve one byte for terminating \0 */
+	/* Reserve one byte for terminating \0 */
 	tolen--;
 	while (elen < fromlen) {
 		pc = (struct pathComponent *)(from + elen);
@@ -52,37 +52,37 @@ static int udf_pc_to_char(struct super_block *sb, unsigned char *from,
 				break;
 			/* Fall through */
 		case 2:
-            if (tolen == 0)
-                return -ENAMETOOLONG;
+			if (tolen == 0)
+				return -ENAMETOOLONG;
 			p = to;
 			*p++ = '/';
-            tolen--;
+			tolen--;
 			break;
 		case 3:
-            if (tolen < 3)
-                return -ENAMETOOLONG;
+			if (tolen < 3)
+				return -ENAMETOOLONG;
 			memcpy(p, "../", 3);
 			p += 3;
-            tolen -= 3;
+			tolen -= 3;
 			break;
 		case 4:
-            if (tolen < 2)
-                return -ENAMETOOLONG;
+			if (tolen < 2)
+				return -ENAMETOOLONG;
 			memcpy(p, "./", 2);
 			p += 2;
-            tolen -= 2;
+			tolen -= 2;
 			/* that would be . - just ignore */
 			break;
 		case 5:
 			comp_len = udf_get_filename(sb, pc->componentIdent,
 						    pc->lengthComponentIdent,
 						    p, tolen);
-            p += comp_len;
+			p += comp_len;
 			tolen -= comp_len;
 			if (tolen == 0)
-                return -ENAMETOOLONG;
+				return -ENAMETOOLONG;
 			*p++ = '/';
-            tolen--;
+			tolen--;
 			break;
 		}
 		elen += sizeof(struct pathComponent) + pc->lengthComponentIdent;
@@ -91,8 +91,7 @@ static int udf_pc_to_char(struct super_block *sb, unsigned char *from,
 		p[-1] = '\0';
 	else
 		p[0] = '\0';
-
-    return 0;
+	return 0;
 }
 
 static int udf_symlink_filler(struct file *file, struct page *page)
@@ -124,8 +123,8 @@ static int udf_symlink_filler(struct file *file, struct page *page)
 
 	err = udf_pc_to_char(inode->i_sb, symlink, inode->i_size, p, PAGE_SIZE);
 	brelse(bh);
-    if (err)
-        goto out_unlock_inode;
+	if (err)
+		goto out_unlock_inode;
 
 	up_read(&iinfo->i_data_sem);
 	SetPageUptodate(page);
