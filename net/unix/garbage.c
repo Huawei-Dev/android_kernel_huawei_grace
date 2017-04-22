@@ -146,6 +146,7 @@ void unix_inflight(struct file *fp)
 void unix_notinflight(struct file *fp)
 {
 	struct sock *s = unix_get_socket(fp);
+
 	spin_lock(&unix_gc_lock);
 
 	if (s) {
