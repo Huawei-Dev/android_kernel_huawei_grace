@@ -1025,20 +1025,22 @@ static void hub_activate(struct usb_hub *hub, enum hub_activation_type type)
 	unsigned delay;
 
 	/* Continue a partial initialization */
-        if (type == HUB_INIT2 || type == HUB_INIT3) {
-                device_lock(hub->intfdev);
 
-                /* Was the hub disconnected while we were waiting? */
-                if (hub->disconnected) {
-                        device_unlock(hub->intfdev);
-                        kref_put(&hub->kref, hub_release);
-                        return;
-                }
-                if (type == HUB_INIT2)
-                        goto init2;
-                goto init3;
-        }
-        kref_get(&hub->kref);
+	if (type == HUB_INIT2 || type == HUB_INIT3) {
+		device_lock(hub->intfdev);
+
+		/* Was the hub disconnected while we were waiting? */
+		if (hub->disconnected) {
+			device_unlock(hub->intfdev);
+			kref_put(&hub->kref, hub_release);
+			return;
+		}
+		if (type == HUB_INIT2)
+			goto init2;
+		goto init3;
+	}
+	kref_get(&hub->kref);
+
 
 	/* The superspeed hub except for root hub has to use Hub Depth
 	 * value as an offset into the route string to locate the bits
@@ -1257,10 +1259,10 @@ static void hub_activate(struct usb_hub *hub, enum hub_activation_type type)
 	if (type <= HUB_INIT3)
 		usb_autopm_put_interface_async(to_usb_interface(hub->intfdev));
 
-        if (type == HUB_INIT2 || type == HUB_INIT3)
-                device_unlock(hub->intfdev);
+	if (type == HUB_INIT2 || type == HUB_INIT3)
+		device_unlock(hub->intfdev);
 
-        kref_put(&hub->kref, hub_release);
+	kref_put(&hub->kref, hub_release);
 }
 
 /* Implement the continuations for the delays above */
