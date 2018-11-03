@@ -78,7 +78,7 @@ static inline void *load_pointer(const struct sk_buff *skb, int k,
  * be accepted or -EPERM if the packet should be tossed.
  *
  */
-int sk_filter(struct sock *sk, struct sk_buff *skb)
+int sk_filter_trim_cap(struct sock *sk, struct sk_buff *skb, unsigned int cap)
 {
 	int err;
 	struct sk_filter *filter;
@@ -105,7 +105,7 @@ int sk_filter(struct sock *sk, struct sk_buff *skb)
 
 	return err;
 }
-EXPORT_SYMBOL(sk_filter);
+EXPORT_SYMBOL(sk_filter_trim_cap);
 
 /**
  *	sk_run_filter - run a filter on a socket
